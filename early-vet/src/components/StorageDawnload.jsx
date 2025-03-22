@@ -211,9 +211,12 @@ const NeedHelpPage = () => {
             Have more questions? Reach out to us!
           </p>
           <div className="mt-4">
-            <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
-            <p className="text-blue-500 underline">support@earlyvet.com</p>
-          </div>
+             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
+              <a href="mailto:earlyvet3@gmail.com" className="text-gray-600 underline">
+                    earlyvet3@gmail.com
+              </a>
+                        </div>
+
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Phone Number</h3>
             <p className="text-gray-600">+251-966-404-013</p>
