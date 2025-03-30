@@ -10,7 +10,7 @@ const NeedHelpPage = () => {
   const [errors, setErrors] = useState({});
   const [charCount, setCharCount] = useState(0);
   const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Loading state for feedback
+  const [isLoading, setIsLoading] = useState(false);
   const maxChars = 180;
 
   // Validation functions
@@ -40,7 +40,6 @@ const NeedHelpPage = () => {
     }
     setFormData({ ...formData, [name]: value });
 
-    // Real-time validation
     let error = "";
     switch (name) {
       case "fullName":
@@ -78,11 +77,16 @@ const NeedHelpPage = () => {
       return;
     }
 
-    setIsLoading(true); // Show loading state
-    setStatus(""); // Clear previous status
+    // Show success message immediately
+    setIsLoading(true);
+    setStatus("Message sent successfully!");
+    setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
+    setCharCount(0);
+    setErrors({});
 
+    // Send request to backend in the background
     try {
-      console.time("fetch"); // Measure fetch duration
+      console.time("fetch");
       const response = await fetch('https://earlyvet-website-1.onrender.com/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -90,22 +94,18 @@ const NeedHelpPage = () => {
       });
 
       const result = await response.json();
-      console.timeEnd("fetch"); // Log fetch duration
+      console.timeEnd("fetch");
 
-      if (response.ok) {
-        setStatus("Message sent successfully!");
-        setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
-        setCharCount(0);
-        setErrors({});
-        setTimeout(() => setStatus(""), 5000); // Clear status after 5s
-      } else {
-        setStatus(result.message || "Failed to send message.");
+      if (!response.ok) {
+        // If backend fails, update status to show error
+        setStatus(result.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
       console.error('Error:', error);
       setStatus("An error occurred. Please try again.");
     } finally {
-      setIsLoading(false); // Hide loading state
+      setIsLoading(false);
+      setTimeout(() => setStatus(""), 5000); // Clear status after 5s
     }
   };
 
@@ -221,7 +221,7 @@ const NeedHelpPage = () => {
           <p className="text-gray-600 text-center">
             Have more questions? Reach out to us!
           </p>
-        <div className="mt-4">
+          <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
             <a
               href="mailto:earlyvet3@gmail.com"
