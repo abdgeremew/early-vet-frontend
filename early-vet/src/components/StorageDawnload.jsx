@@ -82,7 +82,7 @@ const NeedHelpPage = () => {
       setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
       setCharCount(0);
       setErrors({});
-    }, 300); // 3000ms = 3 seconds
+    }, 400); // 3000ms = 3 seconds
 
     // Send request to backend immediately in the background
     try {
