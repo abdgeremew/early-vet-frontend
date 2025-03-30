@@ -76,13 +76,15 @@ const NeedHelpPage = () => {
       return;
     }
 
-    // Show success message immediately
-    setStatus("Message sent successfully!");
-    setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
-    setCharCount(0);
-    setErrors({});
+    // Delay success message by 3 seconds
+    setTimeout(() => {
+      setStatus("Message sent successfully!");
+      setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
+      setCharCount(0);
+      setErrors({});
+    }, 3000); // 3000ms = 3 seconds
 
-    // Send request to backend in the background
+    // Send request to backend immediately in the background
     try {
       console.time("fetch");
       const response = await fetch('https://earlyvet-website-1.onrender.com/contact', {
@@ -101,7 +103,7 @@ const NeedHelpPage = () => {
       console.error('Error:', error);
       setStatus("An error occurred. Please try again.");
     } finally {
-      setTimeout(() => setStatus(""), 5000); // Clear status after 5s
+      setTimeout(() => setStatus(""), 5000); // Clear status after 5s from when it’s set
     }
   };
 
