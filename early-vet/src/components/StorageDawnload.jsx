@@ -225,7 +225,6 @@ const NeedHelpPage = () => {
             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
             <a
               href="mailto:earlyvet3@gmail.com"
-              className="inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
             >
               earlyvet3@gmail.com
             </a>
