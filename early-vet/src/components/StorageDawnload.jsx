@@ -10,7 +10,6 @@ const NeedHelpPage = () => {
   const [errors, setErrors] = useState({});
   const [charCount, setCharCount] = useState(0);
   const [status, setStatus] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const maxChars = 180;
 
   // Validation functions
@@ -78,7 +77,6 @@ const NeedHelpPage = () => {
     }
 
     // Show success message immediately
-    setIsLoading(true);
     setStatus("Message sent successfully!");
     setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
     setCharCount(0);
@@ -97,14 +95,12 @@ const NeedHelpPage = () => {
       console.timeEnd("fetch");
 
       if (!response.ok) {
-        // If backend fails, update status to show error
         setStatus(result.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
       console.error('Error:', error);
       setStatus("An error occurred. Please try again.");
     } finally {
-      setIsLoading(false);
       setTimeout(() => setStatus(""), 5000); // Clear status after 5s
     }
   };
@@ -204,12 +200,9 @@ const NeedHelpPage = () => {
             <div className="text-center mt-auto">
               <button
                 type="submit"
-                disabled={isLoading}
-                className={`bg-gradient-to-r from-[#5F9A49] to-[#1E4D2B] text-white text-lg font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:from-[#4C8A3E] hover:to-[#163C22] ${
-                  isLoading ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className="bg-gradient-to-r from-[#5F9A49] to-[#1E4D2B] text-white text-lg font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:from-[#4C8A3E] hover:to-[#163C22]"
               >
-                {isLoading ? "Sending..." : "Send Message"}
+                Send Message
               </button>
             </div>
           </form>
@@ -223,9 +216,7 @@ const NeedHelpPage = () => {
           </p>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
-            <a
-              href="mailto:earlyvet3@gmail.com"
-            >
+            <a href="mailto:earlyvet3@gmail.com" className="text-gray-600">
               earlyvet3@gmail.com
             </a>
           </div>
