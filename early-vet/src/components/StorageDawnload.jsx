@@ -7,7 +7,6 @@ const NeedHelpPage = () => {
     contactNumber: "",
     message: "",
   });
-
   const [errors, setErrors] = useState({});
   const [charCount, setCharCount] = useState(0);
   const [status, setStatus] = useState("");
@@ -26,7 +25,7 @@ const NeedHelpPage = () => {
 
   const validateContactNumber = (number) => {
     const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-    return phoneRegex.test(number) ? "" : "Please enter a valid phone number (e.g., +251912345678)";
+    return phoneRegex.test(number) ? "" : "Please enter a valid phone number (e.g., +251966404013 or 1234567890).";
   };
 
   const validateMessage = (message) => {
@@ -40,7 +39,6 @@ const NeedHelpPage = () => {
     }
     setFormData({ ...formData, [name]: value });
 
-    // Validate on change and update errors
     let error = "";
     switch (name) {
       case "fullName":
@@ -75,10 +73,20 @@ const NeedHelpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      return; // Stop submission if validation fails
+      return;
     }
 
+    // Delay success message by 3 seconds
+    setTimeout(() => {
+      setStatus("Message sent successfully!");
+      setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
+      setCharCount(0);
+      setErrors({});
+    }, 3000); // 3000ms = 3 seconds
+
+    // Send request to backend immediately in the background
     try {
+      console.time("fetch");
       const response = await fetch('https://earlyvet-website-1.onrender.com/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,18 +94,16 @@ const NeedHelpPage = () => {
       });
 
       const result = await response.json();
-      if (response.ok) {
-        setStatus("Message sent successfully!");
-        setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
-        setCharCount(0);
-        setErrors({}); // Clear errors on success
-        setTimeout(() => setStatus(""), 5000); // Clear status after 5 seconds
-      } else {
-        setStatus(result.message || "Failed to send message.");
+      console.timeEnd("fetch");
+
+      if (!response.ok) {
+        setStatus(result.message || "Failed to send message. Please try again.");
       }
     } catch (error) {
       console.error('Error:', error);
       setStatus("An error occurred. Please try again.");
+    } finally {
+      setTimeout(() => setStatus(""), 5000); // Clear status after 5s from when it’s set
     }
   };
 
@@ -212,7 +218,9 @@ const NeedHelpPage = () => {
           </p>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
-            <p className="text-blue-500 underline">support@earlyvet.com</p>
+            <a href="mailto:earlyvet3@gmail.com" className="text-gray-600">
+              earlyvet3@gmail.com
+            </a>
           </div>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Phone Number</h3>
@@ -228,7 +236,7 @@ const NeedHelpPage = () => {
         </div>
       </div>
 
-      {/* Footer with Copyright Notice */}
+      {/* Footer */}
       <footer className="bg-gray-200 py-4 text-center">
         <p className="text-gray-600 text-sm">
           © 2025 EarlyVet. All rights reserved. Unauthorized reproduction, distribution, or modification of any content, designs, trademarks, or software associated with EarlyVet is strictly prohibited.
