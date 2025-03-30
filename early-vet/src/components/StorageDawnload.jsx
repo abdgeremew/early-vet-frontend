@@ -221,9 +221,14 @@ const NeedHelpPage = () => {
           <p className="text-gray-600 text-center">
             Have more questions? Reach out to us!
           </p>
-          <div className="mt-4">
+        <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
-            <p className="text-blue-500 underline">support@earlyvet.com</p>
+            <a
+              href="mailto:earlyvet3@gmail.com"
+              className="inline-block bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
+            >
+              earlyvet3@gmail.com
+            </a>
           </div>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Phone Number</h3>
