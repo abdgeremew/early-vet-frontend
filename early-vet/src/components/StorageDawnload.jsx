@@ -7,10 +7,10 @@ const NeedHelpPage = () => {
     contactNumber: "",
     message: "",
   });
-
   const [errors, setErrors] = useState({});
   const [charCount, setCharCount] = useState(0);
   const [status, setStatus] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // Loading state for feedback
   const maxChars = 180;
 
   // Validation functions
@@ -25,7 +25,7 @@ const NeedHelpPage = () => {
   };
 
   const validateContactNumber = (number) => {
-    const phoneRegex = /^\+?[1-9]\d{1,14}$/; // Basic international/local phone number format
+    const phoneRegex = /^\+?[1-9]\d{1,14}$/;
     return phoneRegex.test(number) ? "" : "Please enter a valid phone number (e.g., +251966404013 or 1234567890).";
   };
 
@@ -40,7 +40,7 @@ const NeedHelpPage = () => {
     }
     setFormData({ ...formData, [name]: value });
 
-    // Validate on change and update errors
+    // Real-time validation
     let error = "";
     switch (name) {
       case "fullName":
@@ -75,10 +75,14 @@ const NeedHelpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) {
-      return; // Stop submission if validation fails
+      return;
     }
 
+    setIsLoading(true); // Show loading state
+    setStatus(""); // Clear previous status
+
     try {
+      console.time("fetch"); // Measure fetch duration
       const response = await fetch('https://earlyvet-website-1.onrender.com/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -86,18 +90,22 @@ const NeedHelpPage = () => {
       });
 
       const result = await response.json();
+      console.timeEnd("fetch"); // Log fetch duration
+
       if (response.ok) {
         setStatus("Message sent successfully!");
         setFormData({ fullName: "", email: "", contactNumber: "", message: "" });
         setCharCount(0);
-        setErrors({}); // Clear errors on success
-        setTimeout(() => setStatus(""), 5000); // Clear status after 5 seconds
+        setErrors({});
+        setTimeout(() => setStatus(""), 5000); // Clear status after 5s
       } else {
         setStatus(result.message || "Failed to send message.");
       }
     } catch (error) {
       console.error('Error:', error);
       setStatus("An error occurred. Please try again.");
+    } finally {
+      setIsLoading(false); // Hide loading state
     }
   };
 
@@ -196,9 +204,12 @@ const NeedHelpPage = () => {
             <div className="text-center mt-auto">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-[#5F9A49] to-[#1E4D2B] text-white text-lg font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:from-[#4C8A3E] hover:to-[#163C22]"
+                disabled={isLoading}
+                className={`bg-gradient-to-r from-[#5F9A49] to-[#1E4D2B] text-white text-lg font-bold py-3 px-6 rounded-full shadow-lg transition-transform transform hover:scale-105 hover:from-[#4C8A3E] hover:to-[#163C22] ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Send Message
+                {isLoading ? "Sending..." : "Send Message"}
               </button>
             </div>
           </form>
@@ -211,12 +222,9 @@ const NeedHelpPage = () => {
             Have more questions? Reach out to us!
           </p>
           <div className="mt-4">
-             <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
-              <a href="mailto:earlyvet3@gmail.com" className="text-gray-600 underline">
-                    earlyvet3@gmail.com
-              </a>
-                        </div>
-
+            <h3 className="text-lg font-semibold text-gray-800">Support Email</h3>
+            <p className="text-blue-500 underline">support@earlyvet.com</p>
+          </div>
           <div className="mt-4">
             <h3 className="text-lg font-semibold text-gray-800">Phone Number</h3>
             <p className="text-gray-600">+251-966-404-013</p>
@@ -231,7 +239,7 @@ const NeedHelpPage = () => {
         </div>
       </div>
 
-      {/* Footer with Copyright Notice */}
+      {/* Footer */}
       <footer className="bg-gray-200 py-4 text-center">
         <p className="text-gray-600 text-sm">
           © 2025 EarlyVet. All rights reserved. Unauthorized reproduction, distribution, or modification of any content, designs, trademarks, or software associated with EarlyVet is strictly prohibited.
