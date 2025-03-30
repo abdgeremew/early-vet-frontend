@@ -25,7 +25,7 @@ const NeedHelpPage = () => {
 
   const validateContactNumber = (number) => {
     const phoneRegex = /^\+?[1-9]\d{1,14}$/;
-    return phoneRegex.test(number) ? "" : "Please enter a valid phone number (e.g., +251966404013 or 1234567890).";
+    return phoneRegex.test(number) ? "" : "Please enter a valid phone number (e.g., +251912345678)";
   };
 
   const validateMessage = (message) => {
